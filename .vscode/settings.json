@@ -1,0 +1,14 @@
+{
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "always"
+    },
+    "eslint.validate": [
+        "javascript",
+        "typescript",
+        "typescriptreact"
+    ],
+    "eslint.format.enable": true,
+    "typescript.tsdk": "node_modules\\typescript\\lib",
+    "files.eol": "\n",
+    "editor.tabSize": 4
+}
