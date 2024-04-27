@@ -28,10 +28,10 @@ npm run dev
           - [ ] Name
           - [ ] href
   - [ ] Tasks
-    - [ ] Table of Tasks
-    - [ ] Tasks Schema
-      - [ ] Assigned Date
-      - [ ] Title
+    - [X] Table of Tasks
+    - [X] Tasks Schema
+      - [X] Assigned Date
+      - [X] Title
       - [ ] Description
       - [ ] Sources
         - [ ] Links
