@@ -37,11 +37,21 @@ model Session {
 }
 
 model User {
-    id            String      @id @default(cuid()) @map("_id")
+    id            String    @id @default(cuid()) @map("_id")
     name          String?
-    email         String?     @unique
+    email         String?   @unique
     emailVerified DateTime?
     image         String?
     Account       Account[]
     Session       Session[]
+    Task          Task[]
+}
+
+model Task {
+    id     String    @id @default(cuid()) @map("_id")
+    name   String
+    dueTo  DateTime?
+    status String
+    userId String
+    user   User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
