@@ -48,10 +48,11 @@ model User {
 }
 
 model Task {
-    id     String    @id @default(cuid()) @map("_id")
-    name   String
-    dueTo  DateTime?
-    status String
-    userId String
-    user   User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    id          String    @id @default(cuid()) @map("_id")
+    name        String
+    description String?
+    dueTo       DateTime?
+    status      String
+    userId      String
+    user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
