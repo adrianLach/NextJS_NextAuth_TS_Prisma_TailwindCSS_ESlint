@@ -68,8 +68,17 @@ const deleteTask = async (formData: FormData) => {
     return JSON.stringify({ deletedId: deleted.id })
 }
 
+const addTask = async (formData: FormData) => {
 
-const addDummyTask = async (formData: FormData) => {
+    const taskName = formData.get('task_name')?.toString()
+    const taskDescription = formData.get('task_description')?.toString()
+    const taskDueTo = formData.get('task_due_to')?.toString()
+
+    if (!taskName)
+        throw 'taskName must be provided!'
+
+    if (!taskDescription)
+        throw 'taskName must be provided!'
 
     let userId = ''
     try {
@@ -81,7 +90,9 @@ const addDummyTask = async (formData: FormData) => {
     const insert = await prisma.task.create({
         data: {
             userId: userId,
-            name: 'Dummy Task',
+            name: taskName,
+            description: taskDescription,
+            dueTo: taskDueTo ? new Date(Date.parse(taskDueTo)) : null,
             status: 'todo'
         }
     })
@@ -91,4 +102,4 @@ const addDummyTask = async (formData: FormData) => {
     return JSON.stringify({ insertedId: insert.id })
 }
 
-export { getData, deleteTask, addDummyTask }
+export { getData, deleteTask, addTask }
