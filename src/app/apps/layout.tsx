@@ -1,4 +1,4 @@
-import { CheckCircleIcon, HomeSolidIcon, LinkIcon, ProfileCardIcon, SettingsIcon } from '@/components/Icons'
+import { AdminIcon, CheckCircleIcon, HomeSolidIcon, LinkIcon, ProfileCardIcon, SettingsIcon } from '@/components/Icons'
 import Link from 'next/link'
 
 export default function AppsLayout({
@@ -17,7 +17,7 @@ export default function AppsLayout({
                     </Link>
                 </div>
                 <nav className='h-full flex flex-col gap-2 justify-start p-4'>
-                    <Link href={'/apps'} className='flex flex-row items-center gap-4 hover:bg-slate-600 hover:rounded-md p-2 transition-all'>
+                    <Link href={'/apps/shortcuts'} className='flex flex-row items-center gap-4 hover:bg-slate-600 hover:rounded-md p-2 transition-all'>
                         <LinkIcon size={32} className='dark:text-white'></LinkIcon>
                         <p className='text-xl dark:text-white md:block hidden'>Shortcuts</p>
                     </Link>
@@ -34,6 +34,10 @@ export default function AppsLayout({
                     <Link href={'/apps'} className='flex flex-row items-center gap-4 hover:bg-slate-600 hover:rounded-md p-2 transition-all'>
                         <SettingsIcon size={32} className='dark:text-white'></SettingsIcon>
                         <p className='text-xl dark:text-white md:block hidden'>Settings</p>
+                    </Link>
+                    <Link href={'/apps'} className='flex flex-row items-center gap-4 hover:bg-slate-600 hover:rounded-md p-2 transition-all'>
+                        <AdminIcon size={32} className='dark:text-white'></AdminIcon>
+                        <p className='text-xl dark:text-white md:block hidden'>Admin</p>
                     </Link>
                 </nav>
             </div>
