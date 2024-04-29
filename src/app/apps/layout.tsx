@@ -27,7 +27,7 @@ export default function AppsLayout({
                     </Link>
                     <div className='grow'></div>
                     <div className='h-[2px] border border-slate-500'></div>
-                    <Link href={'/apps'} className='flex flex-row items-center gap-4 hover:bg-slate-600 hover:rounded-md p-2 transition-all'>
+                    <Link href={'/account'} className='flex flex-row items-center gap-4 hover:bg-slate-600 hover:rounded-md p-2 transition-all'>
                         <ProfileCardIcon size={32} className='dark:text-white'></ProfileCardIcon>
                         <p className='text-xl dark:text-white md:block hidden'>Account</p>
                     </Link>
