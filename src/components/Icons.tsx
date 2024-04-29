@@ -10,9 +10,21 @@ export type IconProps = {
 const parseIconProps = (props: IconProps) => {
     return {
         size: props.size || 24,
-        className: `w-[${props.size || 24}px] h-[${props.size || 24}px] text-gray-800 dark:text-white ${props.className || ''}`
+        className: `w-[${props.size || 24}px] h-[${props.size || 24}px] ${props.className || ''}`
     }
 }
+
+const CloseIcon = (props: IconProps) => {
+
+    const { size, className } = parseIconProps(props)
+
+    return (
+        <svg className={className} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+        </svg>
+    )
+}
+
 
 const HomeIcon = (props: IconProps) => {
 
@@ -140,4 +152,4 @@ const BinIcon = (props: IconProps) => {
     )
 }
 
-export { HomeIcon, HomeSolidIcon, CheckCircleIcon, CheckCircleSolidIcon, SettingsIcon, SettingsSolidIcon, LinkIcon, ProfileCardIcon, ProfileCardSolidIcon, BinIcon, BinSolidIcon }
+export { HomeIcon, HomeSolidIcon, CheckCircleIcon, CheckCircleSolidIcon, SettingsIcon, SettingsSolidIcon, LinkIcon, ProfileCardIcon, ProfileCardSolidIcon, BinIcon, BinSolidIcon, CloseIcon }
