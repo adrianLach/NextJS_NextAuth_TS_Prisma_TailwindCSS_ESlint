@@ -77,9 +77,6 @@ const addTask = async (formData: FormData) => {
     if (!taskName)
         throw 'taskName must be provided!'
 
-    if (!taskDescription)
-        throw 'taskName must be provided!'
-
     let userId = ''
     try {
         userId = await getUserId()

@@ -40,23 +40,23 @@ export default async function Tasks() {
     const Content = () => {
         return (
             <>
-                <table className='table-auto w-full'>
+                <table className='table-auto w-full text-sm'>
                     <thead>
                         <tr className='border-b-2 border-b-white'>
-                            <th className='text-start'>Status</th>
-                            <th className='text-start'>Task</th>
-                            <th className='text-start'>Description</th>
-                            <th className='text-end'>Due to</th>
-                            <th className='text-end'></th>
+                            <th className='px-2 text-start'>Status</th>
+                            <th className='px-2 text-start'>Task</th>
+                            <th className='px-2 text-start'>Description</th>
+                            <th className='px-2 text-end'>Due to</th>
+                            <th className='px-2 text-end'></th>
                         </tr>
                     </thead>
                     <tbody>
                         {props.data && props.data.map((e, i) => <tr key={i} className='border-b border-b-white'>
-                            <td><Badge text={e.status} status={getStatusCode(e.status)}></Badge></td>
-                            <td>{e.name}</td>
-                            <td>{e.description}</td>
-                            <td className='text-end'>{e.dueTo ? e.dueTo.toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) : '-'}</td>
-                            <td className='text-end'>
+                            <td className='px-2'><Badge text={e.status} status={getStatusCode(e.status)}></Badge></td>
+                            <td className='px-2'>{e.name}</td>
+                            <td className='px-2'>{e.description}</td>
+                            <td className='px-2 text-end whitespace-nowrap'>{e.dueTo ? e.dueTo.toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) : '-'}</td>
+                            <td className='px-2 text-end'>
                                 <form action={deleteTask}>
                                     <input name='id' defaultValue={e.id} hidden></input>
                                     <input name='route' defaultValue={'apps/tasks'} hidden></input>
