@@ -3,14 +3,18 @@
 import Badge from '@/components/Badge'
 import { CloseIcon } from '@/components/Icons'
 
-import { addDummyTask, deleteTask, getData, SSProps } from './actions'
-import { TabelAddDummyButton, TableDeleteButton } from './components'
+import { addTask, deleteTask, getData, SSProps } from './actions'
+import { TableDeleteButton } from './components'
 
 export default async function Tasks() {
 
     const data = await getData()
 
-    const props: SSProps = JSON.parse(data)
+    const props: SSProps = JSON.parse(data, (key, value) => {
+        if(key === 'dueTo')
+            return value === null ? undefined : new Date(value)
+        return value
+    })
 
     const getStatusCode = (status: string) => {
         switch (status) {
@@ -60,14 +64,6 @@ export default async function Tasks() {
                                 </form>
                             </td>
                         </tr>)}
-                        <tr>
-                            <td colSpan={5} className='text-center border-b border-b-white'>
-                                <form action={addDummyTask}>
-                                    <input name='route' defaultValue={'apps/tasks'} hidden></input>
-                                    <TabelAddDummyButton></TabelAddDummyButton>
-                                </form>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </>
@@ -82,10 +78,7 @@ export default async function Tasks() {
                 </div>
                 <div className='w-[2px] border border-slate-500'></div>
                 <div className='text-white'>
-                    <form action={async() => 
-                    {
-                        'use server'
-                    }}>
+                    <form action={addTask}>
                         <div className='flex flex-col gap-4'>
                             <div className='flex justify-center'>
                                 <p className='text-lg text-center grow'>Add a new Task</p>
@@ -94,10 +87,10 @@ export default async function Tasks() {
                                 </button>
                             </div>
                             <div className='h-[2px] border border-slate-500'></div>
-                            <input type='text' placeholder='Name' className='bg-slate-900 w-96 p-2 text-white rounded-md'></input>
-                            <textarea placeholder='Description' className='bg-slate-900 p-2 text-white rounded-md'>
+                            <input name='task_name' type='text' placeholder='Name' className='bg-slate-900 w-96 p-2 text-white rounded-md'></input>
+                            <textarea name='task_description' placeholder='Description' className='bg-slate-900 p-2 text-white rounded-md'>
                             </textarea>
-                            <input type='date' placeholder='Due to' className='bg-slate-900 p-2 dark:text-white dark:[color-scheme:dark] text-white rounded-md'></input>
+                            <input name='task_due_to' type='date' placeholder='Due to' className='bg-slate-900 p-2 dark:text-white dark:[color-scheme:dark] text-white rounded-md'></input>
                             <div className='h-[2px] border border-slate-500'></div>
                             <button type='submit' className='bg-slate-600 rounded-md p-2 font-bold text-lg hover:bg-slate-500 hover:shadow-lg transition-all active:bg-slate-400'>
                                 Add
