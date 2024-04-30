@@ -11,8 +11,10 @@ npm run dev
 ## Tasks
 - [x] Database support
 - [X] Authentication (SignIn/SignUp)
+- [ ] Login Page
 - [ ] Landing Page
 - [ ] Dashboard
+- [ ] Admin Page
 - [ ] Modules
   - [ ] Bookmarks
     - [ ] Folders and Icons
@@ -32,6 +34,6 @@ npm run dev
     - [X] Tasks Schema
       - [X] Assigned Date
       - [X] Title
-      - [ ] Description
+      - [X] Description
       - [ ] Sources
         - [ ] Links
