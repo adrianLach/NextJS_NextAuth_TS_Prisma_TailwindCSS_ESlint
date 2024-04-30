@@ -42,46 +42,46 @@ const getData = async () => {
     return JSON.stringify({ data: tasks })
 }
 
-const deleteTask = async (formData: FormData) => {
-
-    const id = formData.get('id')?.toString()
+const deleteTask = async (taskId: string, revPath: string) => {
 
     let userId = ''
     try {
         userId = await getUserId()
     } catch (error) {
-        return { error: error }
+        return { errors: error }
     }
 
-    if (!id)
-        return { error: 'ID is requited' }
+    if (!taskId)
+        return { errors: 'ID is requited' }
 
     const deleted = await prisma.task.delete({
         where: {
             userId: userId,
-            id: id
+            id: taskId
         }
     })
 
-    revalidatePath(formData.get('route')?.toString() || '')
+    revalidatePath(revPath)
 
     return JSON.stringify({ deletedId: deleted.id })
 }
 
-const addTask = async (formData: FormData) => {
+const addTask = async (prevState: unknown, formData: FormData) => {
 
     const taskName = formData.get('task_name')?.toString()
     const taskDescription = formData.get('task_description')?.toString()
     const taskDueTo = formData.get('task_due_to')?.toString()
 
     if (!taskName)
-        throw 'taskName must be provided!'
+        return {
+            errors: 'Please provide a task name.'
+        }
 
     let userId = ''
     try {
         userId = await getUserId()
     } catch (error) {
-        return { error: error }
+        return { errors: error as string }
     }
 
     const insert = await prisma.task.create({
@@ -96,7 +96,9 @@ const addTask = async (formData: FormData) => {
 
     revalidatePath(formData.get('route')?.toString() || '')
 
-    return JSON.stringify({ insertedId: insert.id })
+    return {
+        message: insert.id
+    }
 }
 
 export { getData, deleteTask, addTask }
