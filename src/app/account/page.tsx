@@ -37,6 +37,7 @@ export default async function Tasks() {
                                 <TableRow label='ID' value={user.id}></TableRow>
                                 <TableRow label='Name' value={user.name}></TableRow>
                                 <TableRow label='E-Mail' value={user.email}></TableRow>
+                                <TableRow label='Role' value={user.role}></TableRow>
                                 <TableRowTitle label='Accounts'></TableRowTitle>
                                 {user.Account.map(e => <TableRow key={e.id} label={e.provider} value={e.providerAccountId}></TableRow>)}
                             </tbody>
