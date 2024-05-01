@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import AppsLayout from '../apps/layout'
 import { getUserAndAccount } from './actions'
+import { SignOutButton } from './components'
 
 export default async function Tasks() {
 
@@ -45,6 +46,7 @@ export default async function Tasks() {
                     </div>
                 </div>
                 <div className='flex flex-col gap-4'>
+                    <SignOutButton></SignOutButton>
                     <div className='text-center w-full'>
                         Type <span className='font-bold'>DELETE</span> to verify.
                     </div>

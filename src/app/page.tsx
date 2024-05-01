@@ -1,4 +1,18 @@
+'use client'
+
+import { signIn, useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+
 export default function Home() {
+
+    const session = useSession()
+    const router = useRouter()
+
+    if(!session.data)
+        return <button onClick={() => signIn('github')}>Login</button>
+
+    router.push('/apps')
+    
 
     return (
         <main className='flex flex-col w-full h-full justify-center'>
