@@ -42,7 +42,7 @@ const getData = async () => {
     return JSON.stringify({ data: tasks })
 }
 
-const deleteTask = async (taskId: string, revPath: string) => {
+const deleteTask = async (formData: FormData) => {
 
     let userId = ''
     try {
@@ -50,6 +50,9 @@ const deleteTask = async (taskId: string, revPath: string) => {
     } catch (error) {
         return { errors: error }
     }
+
+    const taskId = formData.get('taskId')?.toString()
+    const revPath = formData.get('revPath')?.toString() || ''
 
     if (!taskId)
         return { errors: 'ID is requited' }

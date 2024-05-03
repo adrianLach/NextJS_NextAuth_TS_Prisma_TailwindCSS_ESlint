@@ -48,6 +48,18 @@ const HomeSolidIcon = (props: IconProps) => {
     )
 }
 
+const CheckIcon = (props: IconProps) => {
+
+    const { size, className } = parseIconProps(props)
+
+    return (
+        <svg className={className} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 11.917 9.724 16.5 19 7.5"/>
+        </svg>
+    )
+
+}
+
 const CheckCircleIcon = (props: IconProps) => {
 
     const { size, className } = parseIconProps(props)
@@ -164,4 +176,53 @@ const AdminIcon = (props: IconProps) => {
     )
 }
 
-export { HomeIcon, HomeSolidIcon, CheckCircleIcon, CheckCircleSolidIcon, SettingsIcon, SettingsSolidIcon, LinkIcon, ProfileCardIcon, ProfileCardSolidIcon, BinIcon, BinSolidIcon, CloseIcon, AdminIcon }
+const StopIcon = (props: IconProps) => {
+
+    const { size, className } = parseIconProps(props)
+
+    return (
+        <svg className={className} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="none" viewBox="0 0 24 24">
+            <rect width="12" height="12" x="6" y="6" stroke="currentColor" strokeLinejoin="round" strokeWidth="2" rx="1"/>
+        </svg>
+  
+
+    )
+}
+
+const StopSolidIcon = (props: IconProps) => {
+
+    const { size, className } = parseIconProps(props)
+
+    return (
+        <svg className={className} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="currentColor" viewBox="0 0 24 24">
+            <path d="M7 5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H7Z"/>
+        </svg>
+
+
+    )
+}
+
+const AddIcon = (props: IconProps) => {
+
+    const { size, className } = parseIconProps(props)
+
+    return (
+        <svg className={className} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14m-7 7V5"/>
+        </svg>
+    )
+}
+
+const EditIcon = (props: IconProps) => {
+
+    const { size, className } = parseIconProps(props)
+
+    return (
+        <svg className={className} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
+        </svg>
+
+    )
+}
+
+export { HomeIcon, HomeSolidIcon, CheckCircleIcon, CheckCircleSolidIcon, SettingsIcon, SettingsSolidIcon, LinkIcon, ProfileCardIcon, ProfileCardSolidIcon, BinIcon, BinSolidIcon, CloseIcon, AdminIcon, StopIcon, StopSolidIcon, CheckIcon, AddIcon, EditIcon }

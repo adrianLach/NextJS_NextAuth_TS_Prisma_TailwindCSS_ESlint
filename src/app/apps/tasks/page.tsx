@@ -2,8 +2,9 @@
 
 import Badge from '@/components/Badge'
 
-import { deleteTask, getData, SSProps } from './actions'
-import { AddTaskForm, TableDeleteButton } from './components'
+import { getData, SSProps } from './actions'
+import { AddTaskForm, DropDownMenu, TableDeleteButton } from './components'
+import { Table } from '@/components/Table'
 
 export default async function Tasks() {
 
@@ -15,18 +16,15 @@ export default async function Tasks() {
         return value
     })
 
-    const getStatusCode = (status: string) => {
-        switch (status) {
-            case 'done':
-                return 'success'
-            case 'in progress':
-                return 'warning'
-            case 'overdue':
-                return 'error'
-            default:
-                return 'none'
+    const tasks = props.data?.map(e => {
+        return {
+            id: e.id,
+            status: <Badge status={'none'} text={e.status}></Badge>,
+            name: e.name,
+            description: e.description,
+            dueTo: e.dueTo?.toLocaleDateString('de-DE')
         }
-    }
+    })
 
     if(props.error) 
         return (
@@ -36,48 +34,59 @@ export default async function Tasks() {
             </div>
         )
 
-    const Content = () => {
-        return (
-            <>
-                <table className='table-auto w-full text-sm'>
-                    <thead>
-                        <tr className='border-b-2 border-b-white'>
-                            <th className='px-2 text-start'>Status</th>
-                            <th className='px-2 text-start'>Task</th>
-                            <th className='px-2 text-start'>Description</th>
-                            <th className='px-2 text-end'>Due to</th>
-                            <th className='px-2 text-end'></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {props.data && props.data.map((e, i) => {
-                            const deleteTaskById = deleteTask.bind(null, e.id).bind(null, 'apps/tasks')
-                            return (
-                                <tr key={i} className='border-b border-b-white'>
-                                    <td className='px-2'><Badge text={e.status} status={getStatusCode(e.status)}></Badge></td>
-                                    <td className='px-2'>{e.name}</td>
-                                    <td className='px-2'>{e.description}</td>
-                                    <td className='px-2 text-end whitespace-nowrap'>{e.dueTo ? e.dueTo.toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) : '-'}</td>
-                                    <td className='px-2 text-end'>
-                                        <form action={deleteTaskById}>
-                                            <input name='id' defaultValue={e.id} hidden></input>
-                                            <input name='route' defaultValue={'apps/tasks'} hidden></input>
-                                            <TableDeleteButton></TableDeleteButton>
-                                        </form>
-                                    </td>
-                                </tr>
-                            )})}
-                    </tbody>
-                </table>
-            </>
-        )
-    }
-
     return (
         <main className='text-white w-full p-4'>
+            <div id='toolbar' className='flex flex-row gap-2'>
+                <DropDownMenu
+                    items={[
+                        {
+                            key: 'todo',
+                            node: <Badge text='TODO' status='none'></Badge>
+                        },
+                        {
+                            key: 'in_progress',
+                            node: <Badge text='IN PROGRESS' status='warning'></Badge>
+                        },
+                        {
+                            key: 'done',
+                            node: <Badge text='DONE' status='success'></Badge>
+                        },
+                        {
+                            key: 'failed',
+                            node: <Badge text='FAILED' status='error'></Badge>
+                        }
+                    ]}
+                ></DropDownMenu>
+                <TableDeleteButton
+                    id=''
+                    rev=''
+                ></TableDeleteButton>
+            </div>
             <div className='w-full flex flex-row gap-4'>
                 <div className='grow'>
-                    <Content></Content>
+                    <Table
+                        columns={[
+                            {
+                                id: 'status',
+                                text: 'Status'
+                            },
+                            {
+                                id: 'name',
+                                text: 'Name'
+                            },
+                            {
+                                id: 'description',
+                                text: 'Description'
+                            },
+                            {
+                                id: 'dueTo',
+                                text: 'Due To',
+                                numeric: true
+                            },
+                        ]}
+                        data={tasks}
+                    >
+                    </Table>
                 </div>
                 <div className='w-[2px] border border-slate-500'></div>
                 <div className='text-white'>
