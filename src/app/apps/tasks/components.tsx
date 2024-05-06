@@ -308,6 +308,8 @@ const CalendarSelect = (props: CalendarSelectProps) => {
     const [month, setMonth] = useState(props.defaultValue.getMonth())
     const [year, setYear] = useState(props.defaultValue.getFullYear())
 
+    const today = new Date().toISOString().substring(0, 10)
+
     const getDaysOfMonth = (year: number, monthIndex: number) => new Date(year, monthIndex+1, 0).getDate()
     const getFirstWeekdayOfMonth = (year: number, monthIndex: number) => new Date(year, monthIndex, 1).getDay()
 
@@ -368,10 +370,12 @@ const CalendarSelect = (props: CalendarSelectProps) => {
                         return `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`
                     }
 
+                    const isToday = getIndex(year, month+1, i+1) === today
+
                     return (
                         <div 
                             key={getIndex(year, month+1, i+1)} 
-                            className={`${selected.toISOString().substring(0, 10) == getIndex(year, month+1, i+1) ? 'bg-slate-500' : 'bg-slate-800'} hover:bg-slate-500 text-center rounded-md h-8 w-8 content-center transition-all`}
+                            className={`${isToday ? 'bg-slate-500' : 'bg-slate-800'} ${selected.toISOString().substring(0, 10) == getIndex(year, month+1, i+1) ? 'ring ring-blue-300' : ''} hover:bg-slate-500 text-center rounded-md h-8 w-8 content-center transition-all`}
                             onClick={() => setSelected(new Date(getIndex(year, month+1, i+1)))}
                         >
                             {i+1}

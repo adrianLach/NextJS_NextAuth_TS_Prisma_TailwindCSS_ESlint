@@ -68,7 +68,7 @@ export default async function TasksView() {
     const Table = ({tasks}: {tasks: Tasks[]}) => {
         return (
             <div className="relative overflow-x-auto shadow-lg shadow-slate-800 rounded-lg">
-                <table className="w-full text-sm text-left text-slate-400">
+                <table className="w-full text-sm text-left text-white">
                     <thead className="text-xs uppercase bg-slate-600 text-slate-300">
                         <tr>
                             <th scope="col" className="px-6 py-3">Severity</th>
