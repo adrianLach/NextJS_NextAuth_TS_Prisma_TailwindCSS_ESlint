@@ -7,6 +7,14 @@ export default function AppsLayout({
     children: React.ReactNode;
 }>) {
 
+    const MenuItem = ({href, icon, name}: {href: string, icon: React.ReactNode, name: string}) => {
+        
+        return <Link href={href} className='flex flex-row items-center gap-4 hover:bg-slate-600 hover:rounded-md p-2 transition-all'>
+            {icon}
+            <p className='text-xl dark:text-white md:block hidden'>{name}</p>
+        </Link>
+    }
+
     return (
         <div className='flex w-screen bg-slate-700 h-screen'>
             <div className='flex flex-col bg-slate-800 h-full'>
@@ -17,32 +25,13 @@ export default function AppsLayout({
                     </Link>
                 </div>
                 <nav className='h-full flex flex-col gap-2 justify-start p-4'>
-                    <Link href={'/apps/shortcuts'} className='flex flex-row items-center gap-4 hover:bg-slate-600 hover:rounded-md p-2 transition-all'>
-                        <LinkIcon size={32} className='dark:text-white'></LinkIcon>
-                        <p className='text-xl dark:text-white md:block hidden'>Shortcuts</p>
-                    </Link>
-                    <Link href={'/apps/tasks'} className='flex flex-row items-center gap-4 hover:bg-slate-600 hover:rounded-md p-2 transition-all'>
-                        <CheckCircleIcon size={32} className='dark:text-white'></CheckCircleIcon>
-                        <p className='text-xl dark:text-white md:block hidden'>Tasks</p>
-                    </Link>
+                    <MenuItem href='/apps/shortcuts' icon={<LinkIcon size={32} className='dark:text-white'></LinkIcon>} name='Shortcuts'></MenuItem>
+                    <MenuItem href='/apps/tasks' icon={<CheckCircleIcon size={32} className='dark:text-white'></CheckCircleIcon>} name='Tasks'></MenuItem>
                     <div className='grow'></div>
                     <div className='h-[2px] border border-slate-500'></div>
-                    <Link href={'/apps/components'} className='flex flex-row items-center gap-4 hover:bg-slate-600 hover:rounded-md p-2 transition-all'>
-                        <ProfileCardIcon size={32} className='dark:text-white'></ProfileCardIcon>
-                        <p className='text-xl dark:text-white md:block hidden'>Components</p>
-                    </Link>
-                    <Link href={'/account'} className='flex flex-row items-center gap-4 hover:bg-slate-600 hover:rounded-md p-2 transition-all'>
-                        <ProfileCardIcon size={32} className='dark:text-white'></ProfileCardIcon>
-                        <p className='text-xl dark:text-white md:block hidden'>Account</p>
-                    </Link>
-                    <Link href={'/apps'} className='flex flex-row items-center gap-4 hover:bg-slate-600 hover:rounded-md p-2 transition-all'>
-                        <SettingsIcon size={32} className='dark:text-white'></SettingsIcon>
-                        <p className='text-xl dark:text-white md:block hidden'>Settings</p>
-                    </Link>
-                    <Link href={'/apps'} className='flex flex-row items-center gap-4 hover:bg-slate-600 hover:rounded-md p-2 transition-all'>
-                        <AdminIcon size={32} className='dark:text-white'></AdminIcon>
-                        <p className='text-xl dark:text-white md:block hidden'>Admin</p>
-                    </Link>
+                    <MenuItem href='/account' icon={<ProfileCardIcon size={32} className='dark:text-white'></ProfileCardIcon>} name='Account'></MenuItem>
+                    <MenuItem href='/apps' icon={<SettingsIcon size={32} className='dark:text-white'></SettingsIcon>} name='Settings'></MenuItem>
+                    <MenuItem href='/apps' icon={<AdminIcon size={32} className='dark:text-white'></AdminIcon>} name='Admin'></MenuItem>
                 </nav>
             </div>
             <div className='flex w-full flex-col h-full'>

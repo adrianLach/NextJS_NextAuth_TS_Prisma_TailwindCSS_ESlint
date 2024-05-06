@@ -42,6 +42,76 @@ const getData = async () => {
     return JSON.stringify({ data: tasks })
 }
 
+const completeTask = async (formData: FormData) => {
+
+    let userId = ''
+    try {
+        userId = await getUserId()
+    } catch (error) {
+        return { errors: error }
+    }
+
+    const taskId = formData.get('id')?.toString()
+    const status = formData.get('status')?.toString()
+    const revPath = formData.get('revPath')?.toString() || ''
+
+    if (!taskId)
+        return { errors: 'ID is requited' }
+
+    const updated = await prisma.task.update({
+        where: {
+            id: taskId,
+            userId: userId,
+
+        },
+        data: {
+            status: status
+        }
+    })
+
+    revalidatePath(revPath)
+
+    return JSON.stringify({ newStatus: updated.status })
+
+}
+const updateDate = async (formData: FormData) => {
+
+    let userId = ''
+    try {
+        userId = await getUserId()
+    } catch (error) {
+        return { errors: error }
+    }
+
+    const taskId = formData.get('id')?.toString()
+    const date = formData.get('date')?.toString()
+    const revPath = formData.get('revPath')?.toString() || ''
+    const dateObj = date ? new Date(date) : null
+
+    console.dir(formData)
+
+    if (!taskId)
+        return { errors: 'ID is requited' }
+
+    const updated = await prisma.task.update({
+        where: {
+            id: taskId,
+            userId: userId,
+
+        },
+        data: {
+            dueTo: dateObj
+        }
+    })
+
+    console.log(updated)
+
+    revalidatePath(revPath)
+
+    return JSON.stringify({ newDate: updated.dueTo })
+
+}
+
 const deleteTask = async (formData: FormData) => {
 
     let userId = ''
@@ -51,7 +121,7 @@ const deleteTask = async (formData: FormData) => {
         return { errors: error }
     }
 
-    const taskId = formData.get('taskId')?.toString()
+    const taskId = formData.get('id')?.toString()
     const revPath = formData.get('revPath')?.toString() || ''
 
     if (!taskId)
@@ -93,7 +163,7 @@ const addTask = async (prevState: unknown, formData: FormData) => {
             name: taskName,
             description: taskDescription,
             dueTo: taskDueTo ? new Date(Date.parse(taskDueTo)) : null,
-            status: 'todo'
+            status: 'minor'
         }
     })
 
@@ -104,4 +174,4 @@ const addTask = async (prevState: unknown, formData: FormData) => {
     }
 }
 
-export { getData, deleteTask, addTask }
+export { getData, deleteTask, addTask, updateDate, completeTask }

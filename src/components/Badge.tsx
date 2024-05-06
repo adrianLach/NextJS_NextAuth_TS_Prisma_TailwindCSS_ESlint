@@ -1,4 +1,4 @@
-type BadgeStatus = 'success' | 'warning' | 'error' | 'none'
+export type BadgeStatus = 'success' | 'warning' | 'error' | 'none'
 
 export type BadgeProps = {
     text: string,

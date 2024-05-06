@@ -16,23 +16,10 @@ type Row = {
 
 const Table = ({columns, data}: {columns: TableColumns[], data?: Row[]}) => {
 
-    const [selectedRows, setSelectedRows] = useState<number[]>([])
-
-    const onRowClick = (rowId: number) => {
-        let updatedSelectedRows = selectedRows.slice()
-        if(updatedSelectedRows.includes(rowId))
-            updatedSelectedRows = updatedSelectedRows.filter(e => e !== rowId)
-        else {
-            updatedSelectedRows = [...updatedSelectedRows, rowId]
-        }
-        setSelectedRows(updatedSelectedRows)
-    }
-
     return (
         <table className='table-auto w-full text-sm'>
             <thead>
                 <tr className='border-b border-b-white'>
-                    <td></td>
                     {columns.map((e) => {
                         return <th key={e.id} className={`text-${e.numeric ? 'end' : 'start'}`}>{e.text}</th>
                     })}
@@ -41,14 +28,7 @@ const Table = ({columns, data}: {columns: TableColumns[], data?: Row[]}) => {
             <tbody>
                 {data && data.map((e, i) => {
                     return (
-                        <tr key={i} onClick={() => onRowClick(i)} className={`border-b border-b-white ${selectedRows.includes(i) ? 'bg-green-600/25' : ''}`}>
-                            <td>
-                                {selectedRows.includes(i) ? 
-                                    <StopSolidIcon className='text-green-500'></StopSolidIcon>
-                                    :
-                                    <StopIcon></StopIcon>
-                                }
-                            </td>
+                        <tr key={i} className={`border-b border-b-white ${''}`}>
                             {columns.map((c) => {
                                 return <td className={`text-${c.numeric ? 'end' : 'start'}`} key={c.id}>{e[c.id]}</td>
                             })}
