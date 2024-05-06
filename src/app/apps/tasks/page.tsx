@@ -25,13 +25,13 @@ export default async function TasksView() {
     const getStatusFormText = (test: string) => {
         switch (test) {
             case 'minor':
-                return 'success' as BadgeStatus
+                return 'none' as BadgeStatus
             case 'major':
                 return 'warning' as BadgeStatus
             case 'critical':
                 return 'error' as BadgeStatus
             default:
-                return 'none' as BadgeStatus
+                return 'success' as BadgeStatus
         }
     }
     
