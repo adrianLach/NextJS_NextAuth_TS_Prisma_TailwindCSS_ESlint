@@ -41,7 +41,7 @@ export default async function TasksView() {
                 <td scope="row" className="px-6 py-2 font-medium whitespace-nowrap uppercase">
                     <Badge text={task.status} status={getStatusFormText(task.status)}></Badge>
                 </td>
-                <td className="px-6 py-2">
+                <td className="px-6 py-2 whitespace-nowrap">
                     {task.name}
                 </td>
                 <td className="px-6 py-2">
