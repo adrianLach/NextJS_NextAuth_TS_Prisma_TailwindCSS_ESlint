@@ -7,8 +7,8 @@ export default function AppsLayout({
     children: React.ReactNode;
 }>) {
 
-    const MenuItem = ({href, icon, name}: {href: string, icon: React.ReactNode, name: string}) => {
-        
+    const MenuItem = ({ href, icon, name }: { href: string, icon: React.ReactNode, name: string }) => {
+
         return <Link href={href} className='flex flex-row items-center gap-4 hover:bg-slate-600 hover:rounded-md p-2 transition-all'>
             {icon}
             <p className='text-xl text-white md:block hidden'>{name}</p>
@@ -19,7 +19,7 @@ export default function AppsLayout({
         <div className='flex w-screen bg-slate-700 h-screen'>
             <div className='flex flex-col bg-slate-800 h-full'>
                 <div className='h-16 bg-slate-800 w-full flex flex-col justify-center pl-4'>
-                    <Link href={'/apps'}  className='flex flex-row items-end'>
+                    <Link href={'/apps'} className='flex flex-row items-end'>
                         <HomeSolidIcon size={48} className='text-white'></HomeSolidIcon>
                         <p className='text-3xl text-white font-bold md:block hidden'>Arco</p>
                     </Link>

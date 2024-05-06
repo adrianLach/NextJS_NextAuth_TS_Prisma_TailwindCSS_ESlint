@@ -1,8 +1,5 @@
 'use client'
 
-import { useState } from 'react'
-import { StopIcon, StopSolidIcon } from './Icons'
-
 export type TableColumns = {
     id: string,
     text: string,
@@ -14,7 +11,7 @@ type Row = {
     [key: string]: React.ReactNode
 }
 
-const Table = ({columns, data}: {columns: TableColumns[], data?: Row[]}) => {
+const Table = ({ columns, data }: { columns: TableColumns[], data?: Row[] }) => {
 
     return (
         <table className='table-auto w-full text-sm'>

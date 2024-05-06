@@ -11,16 +11,16 @@ export type DropDownItems = {
     node: React.ReactNode
 }
 
-const DropDownMenu = ({items}: {items: DropDownItems[]}) => {
+const DropDownMenu = ({ items }: { items: DropDownItems[] }) => {
 
     const [open, setOpen] = useState(false)
 
-    const Item = ({item}: {item: DropDownItems}) => {
+    const Item = ({ item }: { item: DropDownItems }) => {
 
         const [selected, setSelected] = useState(false)
 
         return (
-            <li 
+            <li
                 onClick={() => setSelected(!selected)}
                 className='flex flex-row px-4 py-2 hover:bg-slate-600 justify-between items-center gap-2'>
                 {item.node}
@@ -36,32 +36,32 @@ const DropDownMenu = ({items}: {items: DropDownItems[]}) => {
     return (
         <>
             <div className='select-none'>
-                <button id="dropdownDefaultButton" onClick={() => setOpen(!open)} 
+                <button id="dropdownDefaultButton" onClick={() => setOpen(!open)}
                     className="mb-2 text-white bg-slate-500 hover:bg-slate-600 focus:ring-1 focus:outline-none focus:ring-white rounded-md text-sm px-4 py-2 text-center inline-flex items-center" type="button">Status<svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
                     </svg>
                 </button>
 
                 {open &&
-                <>
-                    <div className='z-10 w-screen h-screen absolute top-0 left-0' onClick={() => setOpen(false)}></div>
-                    <div id="dropdown" className="absolute z-20 rounded-md bg-slate-800 text-white shadow-xl shadow-slate-800">
-                        <ul className="py-2 text-sm">
-                            {items.map(e => {
-                                return (
-                                    <Item key={e.key} item={e}></Item>
-                                )
-                            })}
-                        </ul>
-                    </div>
-                </>
+                    <>
+                        <div className='z-10 w-screen h-screen absolute top-0 left-0' onClick={() => setOpen(false)}></div>
+                        <div id="dropdown" className="absolute z-20 rounded-md bg-slate-800 text-white shadow-xl shadow-slate-800">
+                            <ul className="py-2 text-sm">
+                                {items.map(e => {
+                                    return (
+                                        <Item key={e.key} item={e}></Item>
+                                    )
+                                })}
+                            </ul>
+                        </div>
+                    </>
                 }
             </div>
         </>
     )
 }
 
-const TableDeleteButton = ({id, rev}: {id: string, rev: string}) => {
+const TableDeleteButton = ({ id, rev }: { id: string, rev: string }) => {
 
     const { pending } = useFormStatus()
 
@@ -89,8 +89,8 @@ const Dialog = (props: DialogProps) => {
             <>
                 <div
                     className='fixed z-20 top-0 left-0 w-screen h-screen flex justify-center items-center text-white'>
-                    <div 
-                        onClick={props.onDismiss} 
+                    <div
+                        onClick={props.onDismiss}
                         className='fixed z-10 top-0 left-0 backdrop-blur-sm w-screen h-screen transition-all'>
                     </div>
                     <div className='z-20 bg-slate-700 rounded-lg shadow-2xl shadow-slate-900 ring-1 ring-slate-600 max-h-[80%]'>
@@ -116,17 +116,17 @@ const Toolbar = () => {
     const DateSelect = () => {
         return (
             <input
-                className='p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 dark:[color-scheme:dark] text-white hover:bg-slate-500 transition-all'  
+                className='p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 dark:[color-scheme:dark] text-white hover:bg-slate-500 transition-all'
                 type='date'
                 defaultValue={new Date().toISOString().substring(0, 10)}
             ></input>
         )
     }
-    
+
     const SearchField = () => {
         return (
             <input
-                className='focus:grow p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 dark:[color-scheme:dark] text-white hover:bg-slate-500 transition-all'  
+                className='focus:grow p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 dark:[color-scheme:dark] text-white hover:bg-slate-500 transition-all'
                 type='search'
                 placeholder='Search...'
             ></input>
@@ -137,7 +137,7 @@ const Toolbar = () => {
         return (
             <button
                 onClick={() => setDialogOpen(true)}
-                className='p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 text-white inline-flex gap-2 items-center hover:bg-slate-500 transition-all'  
+                className='p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 text-white inline-flex gap-2 items-center hover:bg-slate-500 transition-all'
             >
                 New
                 <AddIcon></AddIcon>
@@ -165,7 +165,7 @@ const Toolbar = () => {
                 open={dialogCalendarOpen}
                 onDismiss={() => setCalendarOpen(false)}
             >
-                <CalendarSelect onSelect={(d) => {setDate(d)}} defaultValue={date}></CalendarSelect>
+                <CalendarSelect onSelect={(d) => { setDate(d) }} defaultValue={date}></CalendarSelect>
             </Dialog>
             <div className='flex flex-row gap-2'>
                 <DateSelect></DateSelect>
@@ -189,7 +189,7 @@ const TaskDateRow = (props: TaskDateRowProps) => {
 
     return (
         <>
-            <button 
+            <button
                 className='hover:underline'
                 onClick={() => setCalendarOpen(true)}
             >{props.date ? date.toDateString() : 'Assign Date'}</button>
@@ -198,14 +198,14 @@ const TaskDateRow = (props: TaskDateRowProps) => {
                 open={dialogCalendarOpen}
                 onDismiss={() => setCalendarOpen(false)}
             >
-                <form 
+                <form
                     action={async (fd) => {
                         await updateDate(fd)
                             .then((r) => {
                                 setDate(new Date(JSON.parse(r.toString()).newDate))
                                 setCalendarOpen(false)
                             })
-                    }} 
+                    }}
                     className='flex flex-col'>
                     <input
                         type='text'
@@ -221,8 +221,8 @@ const TaskDateRow = (props: TaskDateRowProps) => {
                         defaultValue={props.id}
                     >
                     </input>
-                    <CalendarSelect onSelect={(d) => {setDate(d)}} defaultValue={date}></CalendarSelect>
-                    <button 
+                    <CalendarSelect onSelect={(d) => { setDate(d) }} defaultValue={date}></CalendarSelect>
+                    <button
                         className='p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 text-white items-center hover:bg-slate-500 transition-all'
                         type='submit'
                     >
@@ -241,15 +241,15 @@ export type WithTaskId = {
 const TaskCompleteButton = (props: WithTaskId) => {
     return (
         <form
-            action={completeTask} 
+            action={completeTask}
         >
-            <input 
+            <input
                 type='text'
                 defaultValue={props.id}
                 hidden
                 name='id'
             ></input>
-            <input 
+            <input
                 type='text'
                 defaultValue={'Complete'}
                 hidden
@@ -263,9 +263,9 @@ const TaskCompleteButton = (props: WithTaskId) => {
 const TaskDeleteButton = (props: WithTaskId) => {
     return (
         <form
-            action={deleteTask} 
+            action={deleteTask}
         >
-            <input 
+            <input
                 type='text'
                 defaultValue={props.id}
                 hidden
@@ -281,9 +281,9 @@ const TaskEditButton = (props: WithTaskId) => {
         <form
             action={async (fd) => {
                 await updateDate(fd)
-            }} 
+            }}
         >
-            <input 
+            <input
                 type='text'
                 defaultValue={props.id}
                 hidden
@@ -310,19 +310,19 @@ const CalendarSelect = (props: CalendarSelectProps) => {
 
     const today = new Date().toISOString().substring(0, 10)
 
-    const getDaysOfMonth = (year: number, monthIndex: number) => new Date(year, monthIndex+1, 0).getDate()
+    const getDaysOfMonth = (year: number, monthIndex: number) => new Date(year, monthIndex + 1, 0).getDate()
     const getFirstWeekdayOfMonth = (year: number, monthIndex: number) => new Date(year, monthIndex, 1).getDay()
 
     const incrementMonth = () => setMonth(month + 1)
     const decrementMonth = () => setMonth(month - 1)
 
     useEffect(() => {
-        if(month == 12) {
+        if (month == 12) {
             setMonth(0)
-            setYear(year+1)
-        } else if(month == -1) {
+            setYear(year + 1)
+        } else if (month == -1) {
             setMonth(11)
-            setYear(year-1)
+            setYear(year - 1)
         }
     }, [month, year])
 
@@ -347,8 +347,8 @@ const CalendarSelect = (props: CalendarSelectProps) => {
                 >{'>'}</button>
                 {[...Array(7)].map((e, i) => {
                     return (
-                        <div 
-                            key={i} 
+                        <div
+                            key={i}
                             className={'text-center h-8 w-8 content-center'}
                         >
                             {days[i]}
@@ -370,23 +370,23 @@ const CalendarSelect = (props: CalendarSelectProps) => {
                         return `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`
                     }
 
-                    const isToday = getIndex(year, month+1, i+1) === today
+                    const isToday = getIndex(year, month + 1, i + 1) === today
 
                     return (
-                        <div 
-                            key={getIndex(year, month+1, i+1)} 
-                            className={`${isToday ? 'bg-slate-500' : 'bg-slate-800'} ${selected.toISOString().substring(0, 10) == getIndex(year, month+1, i+1) ? 'ring ring-blue-300' : ''} hover:bg-slate-500 text-center rounded-md h-8 w-8 content-center transition-all`}
-                            onClick={() => setSelected(new Date(getIndex(year, month+1, i+1)))}
+                        <div
+                            key={getIndex(year, month + 1, i + 1)}
+                            className={`${isToday ? 'bg-slate-500' : 'bg-slate-800'} ${selected.toISOString().substring(0, 10) == getIndex(year, month + 1, i + 1) ? 'ring ring-blue-300' : ''} hover:bg-slate-500 text-center rounded-md h-8 w-8 content-center transition-all`}
+                            onClick={() => setSelected(new Date(getIndex(year, month + 1, i + 1)))}
                         >
-                            {i+1}
+                            {i + 1}
                         </div>
                     )
                 })}
                 {[...Array(42 - getDaysOfMonth(year, month) - getFirstWeekdayOfMonth(year, month))].map((e, i) => {
                     return (
-                        <div 
+                        <div
                             className={'h-8 w-8 text-center content-center'}
-                            key={i} 
+                            key={i}
                         >
                         </div>
                     )
@@ -405,7 +405,7 @@ const AddTaskForm = () => {
     }
 
     const [state, formAction] = useFormState(addTask, initialState)
-    const {pending} = useFormStatus()
+    const { pending } = useFormStatus()
 
     return (
         <form action={formAction}>
@@ -418,22 +418,22 @@ const AddTaskForm = () => {
                         placeholder='Name'
                         name='task_name'
                     ></input>
-                    <textarea 
-                        name='task_description' 
-                        placeholder='Description' 
+                    <textarea
+                        name='task_description'
+                        placeholder='Description'
                         className='p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 text-white hover:bg-slate-500 transition-colors'>
                     </textarea>
-                    <input 
-                        name='task_due_to' 
-                        type='date' 
-                        placeholder='Due to' 
+                    <input
+                        name='task_due_to'
+                        type='date'
+                        placeholder='Due to'
                         className='p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 dark:[color-scheme:dark] text-white hover:bg-slate-500 transition-all'
                     ></input>
                     <div className='h-[2px] border border-slate-500'></div>
                 </div>
-                <button 
-                    disabled={pending} 
-                    type='submit' 
+                <button
+                    disabled={pending}
+                    type='submit'
                     className='p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 text-white items-center hover:bg-slate-500 transition-all'
                 >Add</button>
             </div>

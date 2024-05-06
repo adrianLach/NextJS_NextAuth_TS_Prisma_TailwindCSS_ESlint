@@ -36,7 +36,7 @@ const Folder = () => {
     const [editPanelOpen, setEditPanelOpen] = useState(false)
     const [editText, setEditText] = useState(false)
 
-    const ModalPanel = ({children, onDispose}: {children?: React.ReactNode, onDispose?: () => void}) => {
+    const ModalPanel = ({ children, onDispose }: { children?: React.ReactNode, onDispose?: () => void }) => {
         return (
             <>
                 <div className='z-10 w-screen h-screen absolute top-0 left-0 bg-slate-300/25' onClick={onDispose}></div>
@@ -82,29 +82,29 @@ const Folder = () => {
                     )
                 })}
                 {editText &&
-                <div>
-                    <div onClick={() => setEditPanelOpen(true)} className={`max-w-${size} min-w-${size} min-h-${size} max-h-${size} overflow-clip bg-slate-800 p-2 text-center rounded-xl hover:shadow-lg hover:shadow-black transition-all flex flex-col items-center justify-center`}>
-                        <AddIcon size={32}></AddIcon>
+                    <div>
+                        <div onClick={() => setEditPanelOpen(true)} className={`max-w-${size} min-w-${size} min-h-${size} max-h-${size} overflow-clip bg-slate-800 p-2 text-center rounded-xl hover:shadow-lg hover:shadow-black transition-all flex flex-col items-center justify-center`}>
+                            <AddIcon size={32}></AddIcon>
+                        </div>
+                        {editPanelOpen &&
+                            <ModalPanel
+                                onDispose={() => setEditPanelOpen(false)}
+                            >
+                                <form className='flex flex-col gap-2 p-4 w-96'>
+                                    <p className='text-xl'>Add a new Shortcut</p>
+                                    <div className='h-[2px] border border-slate-500'></div>
+                                    <label htmlFor='name'>Name</label>
+                                    <input required className='bg-slate-900 p-2 text-white rounded-md' id='name'></input>
+                                    <label htmlFor='url'>URL</label>
+                                    <input required className='bg-slate-900 p-2 text-white rounded-md' id='url'></input>
+                                    <label htmlFor='icon'>Icon</label>
+                                    <input className='bg-slate-900 p-2 text-white rounded-md' id='icon'></input>
+                                    <div className='h-[2px] border border-slate-500'></div>
+                                    <button type='submit' className='bg-slate-600 rounded-md p-2 font-bold text-lg hover:bg-slate-500 hover:shadow-lg transition-all active:bg-slate-400'>Add</button>
+                                </form>
+                            </ModalPanel>
+                        }
                     </div>
-                    {editPanelOpen &&
-                    <ModalPanel
-                        onDispose={() => setEditPanelOpen(false)}
-                    >
-                        <form className='flex flex-col gap-2 p-4 w-96'>
-                            <p className='text-xl'>Add a new Shortcut</p>
-                            <div className='h-[2px] border border-slate-500'></div>
-                            <label htmlFor='name'>Name</label>
-                            <input required className='bg-slate-900 p-2 text-white rounded-md' id='name'></input>
-                            <label htmlFor='url'>URL</label>
-                            <input required className='bg-slate-900 p-2 text-white rounded-md' id='url'></input>
-                            <label htmlFor='icon'>Icon</label>
-                            <input className='bg-slate-900 p-2 text-white rounded-md' id='icon'></input>
-                            <div className='h-[2px] border border-slate-500'></div>
-                            <button type='submit' className='bg-slate-600 rounded-md p-2 font-bold text-lg hover:bg-slate-500 hover:shadow-lg transition-all active:bg-slate-400'>Add</button>
-                        </form>
-                    </ModalPanel>
-                    }
-                </div>
                 }
             </div>
         </div>

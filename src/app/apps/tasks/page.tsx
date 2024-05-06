@@ -9,12 +9,12 @@ export default async function TasksView() {
     const data = await getData()
 
     const props: SSProps = JSON.parse(data, (key, value) => {
-        if(key === 'dueTo')
+        if (key === 'dueTo')
             return value === null ? undefined : new Date(value)
         return value
     })
 
-    if(props.error) 
+    if (props.error)
         return (
             <div className='flex flex-row items-center justify-center'>
                 <p className='text-lg'>An Error occured</p>
@@ -34,9 +34,8 @@ export default async function TasksView() {
                 return 'success' as BadgeStatus
         }
     }
-    
 
-    const TableRow = ({task}: {task: Tasks}) => {
+    const TableRow = ({ task }: { task: Tasks }) => {
         return (
             <tr className="odd:bg-slate-900 even:bg-slate-800 border-b border-slate-700">
                 <td scope="row" className="px-6 py-2 font-medium whitespace-nowrap uppercase">
@@ -44,7 +43,7 @@ export default async function TasksView() {
                 </td>
                 <td className="px-6 py-2">
                     {task.name}
-                </td>   
+                </td>
                 <td className="px-6 py-2">
                     {task.description}
                 </td>
@@ -65,7 +64,7 @@ export default async function TasksView() {
             </tr>
         )
     }
-    const Table = ({tasks}: {tasks: Tasks[]}) => {
+    const Table = ({ tasks }: { tasks: Tasks[] }) => {
         return (
             <div className="relative overflow-x-auto shadow-lg shadow-slate-800 rounded-lg">
                 <table className="w-full text-sm text-left text-white">
