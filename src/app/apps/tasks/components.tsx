@@ -1,9 +1,10 @@
 'use client'
 
-import { AddIcon, CheckIcon } from '@/components/Icons'
+import { AddIcon, CalendarIcon, CheckIcon, TableIcon } from '@/components/Icons'
 import { useFormState, useFormStatus } from 'react-dom'
-import { addTask, completeTask, deleteTask, updateDate } from './actions'
+import { Tasks, addTask, completeTask, deleteTask, updateDate } from './actions'
 import React, { useEffect, useState } from 'react'
+import Badge, { BadgeStatus } from '@/components/Badge'
 
 
 export type DropDownItems = {
@@ -108,17 +109,196 @@ const Dialog = (props: DialogProps) => {
     return null
 }
 
-const Toolbar = () => {
+const TaskViewWithToolbar = ({ tasks }: { tasks: Tasks[] }) => {
+
+    const getStatusFormText = (test: string) => {
+        switch (test) {
+            case 'minor':
+                return 'none' as BadgeStatus
+            case 'major':
+                return 'warning' as BadgeStatus
+            case 'critical':
+                return 'error' as BadgeStatus
+            default:
+                return 'success' as BadgeStatus
+        }
+    }
+
+    const TableRow = ({ task }: { task: Tasks }) => {
+        return (
+            <tr className="odd:bg-slate-900 even:bg-slate-800 border-b border-slate-700">
+                <td scope="row" className="px-6 py-2 font-medium whitespace-nowrap uppercase">
+                    <Badge text={task.status} status={getStatusFormText(task.status)}></Badge>
+                </td>
+                <td className="px-6 py-2 whitespace-nowrap">
+                    {task.name} {task.status}
+                </td>
+                <td className="px-6 py-2">
+                    {task.description}
+                </td>
+                <td className="px-6 py-2 whitespace-nowrap">
+                    <TaskDateRow id={task.id} date={task.dueTo}></TaskDateRow>
+                </td>
+                <td className="px-6 py-2">
+                    <div className='flex flex-row gap-2'>
+                        <TaskEditButton id={task.id}></TaskEditButton>
+                        {task.status === 'Complete'
+                            ?
+                            <TaskDeleteButton id={task.id}></TaskDeleteButton>
+                            :
+                            <TaskCompleteButton id={task.id}></TaskCompleteButton>
+                        }
+                    </div>
+                </td>
+            </tr>
+        )
+    }
+    const Table = ({ tasks }: { tasks: Tasks[] }) => {
+        return (
+            <div className="relative overflow-x-auto shadow-lg shadow-slate-800 rounded-lg">
+                <table className="w-full text-sm text-left text-white">
+                    <thead className="text-xs uppercase bg-slate-600 text-slate-300">
+                        <tr>
+                            <th scope="col" className="px-6 py-3">Severity</th>
+                            <th scope="col" className="px-6 py-3">Name</th>
+                            <th scope="col" className="px-6 py-3">Description</th>
+                            <th scope="col" className="px-6 py-3">Date</th>
+                            <th scope="col" className="px-6 py-3">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {tasks.map(e => <TableRow key={e.id} task={e}></TableRow>)}
+                    </tbody>
+                </table>
+            </div>
+
+        )
+    }
+
+    const CalendarView = (props: { tasks: Tasks[] }) => {
+        const DayView = (props: { tasks: Tasks[], date: Date }) => {
+            return (
+                <div className='group min-h-24 bg-slate-800 flex flex-col gap-1 p-1 rounded-lg select-none'>
+                    <div className='text-center'>
+                        {new Date(props.date.toISOString().substring(0, 10)).toLocaleDateString('en-US', { day: '2-digit', weekday: 'long', month: 'long' })}
+                    </div>
+                    <div
+                        className='group-hover:bg-slate-700 group-hover:text-white rounded-md flex flex-row p-1 justify-center transition-all text-slate-800'
+                    >
+                        <p><AddIcon></AddIcon></p>
+                    </div>
+                    {props.tasks
+                        .filter(e => e.dueTo ? e.dueTo.toISOString().substring(0, 10) === props.date.toISOString().substring(0, 10) : false)
+                        .map((e) => {
+                            return (
+                                <div
+                                    key={e.id}
+                                    className='bg-slate-700 text-sm flex flex-row gap-1 whitespace-nowrap overflow-x-clip p-1 rounded-md justify-between'
+                                >
+                                    <p className='overflow-clip'>{e.name}</p>
+                                    <p><Badge text={e.status.substring(0, 1)} status={getStatusFormText(e.status)}></Badge></p>
+                                </div>
+                            )
+                        })}
+                </div>
+            )
+        }
+
+        const getDaysOfMonth = (year: number, monthIndex: number) => new Date(year, monthIndex + 1, 0).getDate()
+        const getFirstWeekdayOfMonth = (year: number, monthIndex: number) => new Date(year, monthIndex, 1).getDay()
+
+        return (
+            <div className='bg-slate-900 shadow-lg shadow-slate-800 rounded-lg'>
+                <div className="text-xs uppercase bg-slate-600 text-slate-300 h-16 rounded-t-lg">
+
+                </div>
+                <div className='grid grid-cols-7 gap-2 p-4 relative overflow-x-auto'>
+                    {[...new Array(getFirstWeekdayOfMonth(2024, 4))].map((e, i) => <div key={i}></div>)}
+                    {[...new Array(getDaysOfMonth(2024, 4))].map((e, i) => {
+                        return (
+                            <DayView key={i} tasks={props.tasks} date={new Date(2024, 4, i + 2)}></DayView>
+                        )
+                    })}
+                </div>
+            </div>
+        )
+    }
+
+    const [date, setDate] = useState(new Date())
+    const [ignoreCompleted, setIgnoreCompleted] = useState(false)
+    const [view, setView] = useState<'table' | 'calendar'>('table')
+
+    return (
+        <div className='text-white w-full p-4 flex flex-col gap-4'>
+            <Toolbar
+                filter={
+                    {
+                        date: {
+                            value: date,
+                            onChange: (e) => setDate(e)
+                        },
+                        ignoreCompleted: {
+                            value: ignoreCompleted,
+                            onChange: (e) => setIgnoreCompleted(e)
+                        },
+                        view: {
+                            value: view,
+                            onChange: (e) => setView(e)
+                        }
+                    }}
+            ></Toolbar >
+            <div className='w-full flex flex-col gap-4'>
+                <div className='grow'>
+                    {view === 'table' &&
+                        <Table tasks={
+                            tasks
+                                .filter(e => ignoreCompleted ? e.status !== 'Complete' : true)
+                                .filter(e => e.dueTo ? e.dueTo.toISOString().substring(0, 10) === date.toISOString().substring(0, 10) : true)
+                        }></Table>
+                    }
+                    {view === 'calendar' &&
+                        <CalendarView tasks={tasks}></CalendarView>
+                    }
+                </div>
+            </div>
+        </div>
+    )
+}
+
+type ToolbarProps = {
+    filter: {
+        date: {
+            value: Date,
+            onChange: (d: Date) => void
+        },
+        ignoreCompleted: {
+            value: boolean,
+            onChange: (d: boolean) => void
+        },
+        view: {
+            value: 'table' | 'calendar',
+            onChange: (d: 'table' | 'calendar') => void
+        }
+    }
+}
+
+const Toolbar = (props: ToolbarProps) => {
 
     const [dialogOpen, setDialogOpen] = useState(false)
     const [dialogCalendarOpen, setCalendarOpen] = useState(false)
 
-    const DateSelect = () => {
+    type DateSelectProps = {
+        value: Date,
+        onChange: (e: Date) => void
+    }
+
+    const DateSelect = (props: DateSelectProps) => {
         return (
             <input
                 className='p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 dark:[color-scheme:dark] text-white hover:bg-slate-500 transition-all'
                 type='date'
-                defaultValue={new Date().toISOString().substring(0, 10)}
+                value={props.value.toISOString().substring(0, 10)}
+                onChange={e => props.onChange(new Date(e.currentTarget.value))}
             ></input>
         )
     }
@@ -133,23 +313,60 @@ const Toolbar = () => {
         )
     }
 
+    type IgnoreCompleteCheckBoxProps = {
+        selected: boolean,
+        onSelectionChange: (selected: boolean) => void
+    }
+
+    const IgnoreCompleteCheckBox = (props: IgnoreCompleteCheckBoxProps) => {
+
+        return (
+            <div
+                className='inline-flex justify-center items-center gap-2 p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 text-white hover:bg-slate-500 transition-all'
+                onClick={() => props.onSelectionChange(!props.selected)}
+            >
+                <input
+                    type='checkbox'
+                    checked={props.selected}
+                    onClick={() => props.onSelectionChange(!props.selected)}
+                ></input>
+                <label>Ignore Completed</label>
+            </div>
+        )
+    }
+
     const IconButtonNew = () => {
         return (
             <button
                 onClick={() => setDialogOpen(true)}
                 className='p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 text-white inline-flex gap-2 items-center hover:bg-slate-500 transition-all'
             >
-                New
                 <AddIcon></AddIcon>
             </button>
         )
     }
 
+    const ViewSwitchButton = (props: { view: 'table' | 'calendar', onChange: (view: 'table' | 'calendar') => void }) => {
+        return (
+            <div
+                className='shadow-lg shadow-slate-800 rounded-md bg-slate-600 text-white inline-flex items-center'
+            >
+                <div
+                    onClick={() => props.onChange('table')}
+                    className={`p-2 hover:bg-slate-500 rounded-md transition-all ${props.view === 'table' ? 'bg-slate-500' : ''}`}
+                >
+                    <TableIcon></TableIcon>
+                </div>
+                <div
+                    onClick={() => props.onChange('calendar')}
+                    className={`p-2 hover:bg-slate-500 rounded-md transition-all ${props.view === 'calendar' ? 'bg-slate-500' : ''}`}
+                >
+                    <CalendarIcon></CalendarIcon>
+                </div>
+            </div >
+        )
+    }
     const [date, setDate] = useState(new Date())
-
-    useEffect(() => {
-        console.log(date)
-    }, [date])
 
     return (
         <>
@@ -168,10 +385,18 @@ const Toolbar = () => {
                 <CalendarSelect onSelect={(d) => { setDate(d) }} defaultValue={date}></CalendarSelect>
             </Dialog>
             <div className='flex flex-row gap-2'>
-                <DateSelect></DateSelect>
+                <IconButtonNew></IconButtonNew>
+                <ViewSwitchButton view={props.filter.view.value} onChange={e => props.filter.view.onChange(e)}></ViewSwitchButton>
+                <DateSelect
+                    value={props.filter.date.value}
+                    onChange={(e) => props.filter.date.onChange(e)}
+                ></DateSelect>
+                <IgnoreCompleteCheckBox
+                    onSelectionChange={e => props.filter.ignoreCompleted.onChange(e)}
+                    selected={props.filter.ignoreCompleted.value}
+                ></IgnoreCompleteCheckBox>
                 <SearchField></SearchField>
                 <div className='grow'></div>
-                <IconButtonNew></IconButtonNew>
             </div>
         </>
     )
@@ -278,11 +503,7 @@ const TaskDeleteButton = (props: WithTaskId) => {
 
 const TaskEditButton = (props: WithTaskId) => {
     return (
-        <form
-            action={async (fd) => {
-                await updateDate(fd)
-            }}
-        >
+        <form>
             <input
                 type='text'
                 defaultValue={props.id}
@@ -441,4 +662,4 @@ const AddTaskForm = () => {
     )
 }
 
-export { TableDeleteButton, AddTaskForm, DropDownMenu, Toolbar, Dialog, TaskDateRow, TaskCompleteButton, TaskEditButton, TaskDeleteButton }
+export { TableDeleteButton, AddTaskForm, DropDownMenu, Toolbar, Dialog, TaskDateRow, TaskCompleteButton, TaskEditButton, TaskDeleteButton, TaskViewWithToolbar }

@@ -25,6 +25,28 @@ const CloseIcon = (props: IconProps) => {
     )
 }
 
+const TableIcon = (props: IconProps) => {
+
+    const { size, className } = parseIconProps(props)
+
+    return (
+        <svg className={className} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" strokeWidth="2" d="M3 11h18M3 15h18m-9-4v8m-8 0h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z" />
+        </svg>
+    )
+}
+
+const CalendarIcon = (props: IconProps) => {
+
+    const { size, className } = parseIconProps(props)
+
+    return (
+        <svg className={className} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z" />
+        </svg>
+
+    )
+}
 
 const HomeIcon = (props: IconProps) => {
 
@@ -225,4 +247,25 @@ const EditIcon = (props: IconProps) => {
     )
 }
 
-export { HomeIcon, HomeSolidIcon, CheckCircleIcon, CheckCircleSolidIcon, SettingsIcon, SettingsSolidIcon, LinkIcon, ProfileCardIcon, ProfileCardSolidIcon, BinIcon, BinSolidIcon, CloseIcon, AdminIcon, StopIcon, StopSolidIcon, CheckIcon, AddIcon, EditIcon }
+export {
+    HomeIcon,
+    HomeSolidIcon,
+    CheckCircleIcon,
+    CheckCircleSolidIcon,
+    SettingsIcon,
+    SettingsSolidIcon,
+    LinkIcon,
+    ProfileCardIcon,
+    ProfileCardSolidIcon,
+    BinIcon,
+    BinSolidIcon,
+    CloseIcon,
+    AdminIcon,
+    StopIcon,
+    StopSolidIcon,
+    CheckIcon,
+    AddIcon,
+    EditIcon,
+    TableIcon,
+    CalendarIcon
+}
