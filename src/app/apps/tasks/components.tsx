@@ -178,12 +178,12 @@ const TaskViewWithToolbar = ({ tasks }: { tasks: Tasks[] }) => {
     const CalendarView = (props: { tasks: Tasks[] }) => {
         const DayView = (props: { tasks: Tasks[], date: Date }) => {
             return (
-                <div className='group min-h-24 bg-slate-800 flex flex-col gap-1 p-1 rounded-lg select-none'>
+                <div className='min-h-24 bg-slate-800 flex flex-col gap-1 p-1 rounded-lg select-none'>
                     <div className='text-center'>
                         {new Date(props.date.toISOString().substring(0, 10)).toLocaleDateString('en-US', { day: '2-digit', weekday: 'long', month: 'long' })}
                     </div>
                     <div
-                        className='group-hover:bg-slate-700 group-hover:text-white rounded-md flex flex-row p-1 justify-center transition-all text-slate-800'
+                        className='hover:bg-slate-700 hover:text-white cursor-pointer rounded-md flex flex-row p-1 justify-center transition-all text-slate-800'
                     >
                         <p><AddIcon></AddIcon></p>
                     </div>
@@ -209,8 +209,24 @@ const TaskViewWithToolbar = ({ tasks }: { tasks: Tasks[] }) => {
 
         return (
             <div className='bg-slate-900 shadow-lg shadow-slate-800 rounded-lg'>
-                <div className="text-xs uppercase bg-slate-600 text-slate-300 h-16 rounded-t-lg">
-
+                <div className="bg-slate-800 text-slate-300 rounded-t-lg flex flex-row p-2">
+                    <div className='grow'></div>
+                    <div className='grid grid-cols-7 gap-2 select-none'>
+                        <button
+                            type='button'
+                            className='h-8 w-8 p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 text-white inline-flex gap-2 items-center hover:bg-slate-500 justify-center transition-all'
+                        >{'<'}</button>
+                        <p
+                            className='text-center h-8 content-center col-span-3 p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 text-white inline-flex gap-2 items-center justify-center'
+                        >{'Mai'}</p>
+                        <p
+                            className='text-center h-8 content-center col-span-2 p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 text-white inline-flex gap-2 items-center justify-center'
+                        >{2024}</p>
+                        <button
+                            type='button'
+                            className='h-8 w-8 p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 text-white inline-flex gap-2 items-center hover:bg-slate-500 justify-center transition-all'
+                        >{'>'}</button>
+                    </div>
                 </div>
                 <div className='grid grid-cols-7 gap-2 p-4 relative overflow-x-auto'>
                     {[...new Array(getFirstWeekdayOfMonth(2024, 4))].map((e, i) => <div key={i}></div>)}
@@ -224,7 +240,6 @@ const TaskViewWithToolbar = ({ tasks }: { tasks: Tasks[] }) => {
         )
     }
 
-    const [date, setDate] = useState(new Date())
     const [ignoreCompleted, setIgnoreCompleted] = useState(false)
     const [view, setView] = useState<'table' | 'calendar'>('table')
 
@@ -233,10 +248,6 @@ const TaskViewWithToolbar = ({ tasks }: { tasks: Tasks[] }) => {
             <Toolbar
                 filter={
                     {
-                        date: {
-                            value: date,
-                            onChange: (e) => setDate(e)
-                        },
                         ignoreCompleted: {
                             value: ignoreCompleted,
                             onChange: (e) => setIgnoreCompleted(e)
@@ -253,7 +264,6 @@ const TaskViewWithToolbar = ({ tasks }: { tasks: Tasks[] }) => {
                         <Table tasks={
                             tasks
                                 .filter(e => ignoreCompleted ? e.status !== 'Complete' : true)
-                                .filter(e => e.dueTo ? e.dueTo.toISOString().substring(0, 10) === date.toISOString().substring(0, 10) : true)
                         }></Table>
                     }
                     {view === 'calendar' &&
@@ -267,10 +277,6 @@ const TaskViewWithToolbar = ({ tasks }: { tasks: Tasks[] }) => {
 
 type ToolbarProps = {
     filter: {
-        date: {
-            value: Date,
-            onChange: (d: Date) => void
-        },
         ignoreCompleted: {
             value: boolean,
             onChange: (d: boolean) => void
@@ -286,22 +292,6 @@ const Toolbar = (props: ToolbarProps) => {
 
     const [dialogOpen, setDialogOpen] = useState(false)
     const [dialogCalendarOpen, setCalendarOpen] = useState(false)
-
-    type DateSelectProps = {
-        value: Date,
-        onChange: (e: Date) => void
-    }
-
-    const DateSelect = (props: DateSelectProps) => {
-        return (
-            <input
-                className='p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 dark:[color-scheme:dark] text-white hover:bg-slate-500 transition-all'
-                type='date'
-                value={props.value.toISOString().substring(0, 10)}
-                onChange={e => props.onChange(new Date(e.currentTarget.value))}
-            ></input>
-        )
-    }
 
     const SearchField = () => {
         return (
@@ -387,10 +377,6 @@ const Toolbar = (props: ToolbarProps) => {
             <div className='flex flex-row gap-2'>
                 <IconButtonNew></IconButtonNew>
                 <ViewSwitchButton view={props.filter.view.value} onChange={e => props.filter.view.onChange(e)}></ViewSwitchButton>
-                <DateSelect
-                    value={props.filter.date.value}
-                    onChange={(e) => props.filter.date.onChange(e)}
-                ></DateSelect>
                 <IgnoreCompleteCheckBox
                     onSelectionChange={e => props.filter.ignoreCompleted.onChange(e)}
                     selected={props.filter.ignoreCompleted.value}
@@ -596,7 +582,7 @@ const CalendarSelect = (props: CalendarSelectProps) => {
                     return (
                         <div
                             key={getIndex(year, month + 1, i + 1)}
-                            className={`${isToday ? 'bg-slate-500' : 'bg-slate-800'} ${selected.toISOString().substring(0, 10) == getIndex(year, month + 1, i + 1) ? 'ring ring-blue-300' : ''} hover:bg-slate-500 text-center rounded-md h-8 w-8 content-center transition-all`}
+                            className={`${isToday ? 'ring-2 ring-blue-300' : ''} ${selected.toISOString().substring(0, 10) == getIndex(year, month + 1, i + 1) ? 'bg-slate-500' : 'bg-slate-800'} hover:bg-slate-500 text-center rounded-md h-8 w-8 content-center transition-all`}
                             onClick={() => setSelected(new Date(getIndex(year, month + 1, i + 1)))}
                         >
                             {i + 1}
