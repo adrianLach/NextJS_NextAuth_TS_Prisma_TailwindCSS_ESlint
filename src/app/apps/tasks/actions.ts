@@ -85,7 +85,6 @@ const updateDate = async (formData: FormData) => {
 
     const taskId = formData.get('id')?.toString()
     const date = formData.get('date')?.toString()
-    const revPath = formData.get('revPath')?.toString() || ''
     const dateObj = date ? new Date(date) : null
 
     console.dir(formData)
@@ -106,7 +105,7 @@ const updateDate = async (formData: FormData) => {
 
     console.log(updated)
 
-    revalidatePath(revPath)
+    revalidatePath('')
 
     return JSON.stringify({ newDate: updated.dueTo })
 
@@ -139,11 +138,14 @@ const deleteTask = async (formData: FormData) => {
     return JSON.stringify({ deletedId: deleted.id })
 }
 
-const addTask = async (prevState: unknown, formData: FormData) => {
+const addTask = async (formData: FormData) => {
 
     const taskName = formData.get('task_name')?.toString()
     const taskDescription = formData.get('task_description')?.toString()
     const taskDueTo = formData.get('task_due_to')?.toString()
+    const taskStatus = formData.get('task_status')?.toString() || 'minor'
+
+    console.log(formData)
 
     if (!taskName)
         return {
@@ -163,15 +165,13 @@ const addTask = async (prevState: unknown, formData: FormData) => {
             name: taskName,
             description: taskDescription,
             dueTo: taskDueTo ? new Date(Date.parse(taskDueTo)) : null,
-            status: 'minor'
+            status: taskStatus
         }
     })
 
-    revalidatePath(formData.get('route')?.toString() || '')
+    revalidatePath('')
 
-    return {
-        message: insert.id
-    }
+    return { inserted: insert }
 }
 
 export { getData, deleteTask, addTask, updateDate, completeTask }

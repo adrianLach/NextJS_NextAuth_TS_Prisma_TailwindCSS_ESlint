@@ -1,10 +1,10 @@
 'use client'
 
 import { AddIcon, CalendarIcon, CheckIcon, TableIcon } from '@/components/Icons'
-import { useFormState, useFormStatus } from 'react-dom'
+import { useFormStatus } from 'react-dom'
 import { Tasks, addTask, completeTask, deleteTask, updateDate } from './actions'
 import React, { useEffect, useState } from 'react'
-import Badge, { BadgeStatus } from '@/components/Badge'
+import {Badge, BadgeStatus } from '@/components/Badge'
 
 
 export type DropDownItems = {
@@ -131,7 +131,7 @@ const TaskViewWithToolbar = ({ tasks }: { tasks: Tasks[] }) => {
                     <Badge text={task.status} status={getStatusFormText(task.status)}></Badge>
                 </td>
                 <td className="px-6 py-2 whitespace-nowrap">
-                    {task.name} {task.status}
+                    {task.name}
                 </td>
                 <td className="px-6 py-2">
                     {task.description}
@@ -177,9 +177,23 @@ const TaskViewWithToolbar = ({ tasks }: { tasks: Tasks[] }) => {
 
     const CalendarView = (props: { tasks: Tasks[] }) => {
         const DayView = (props: { tasks: Tasks[], date: Date }) => {
+
+            const color = (c: string) => {
+                switch (c) {
+                    case 'critical':
+                        return 'bg-red-300'
+                    case 'major':
+                        return 'bg-orange-300'
+                    case 'minor':
+                        return 'bg-gray-300'
+                    default:
+                        return 'bg-green-300'
+                }
+            }
+
             return (
-                <div className='min-h-24 bg-slate-800 flex flex-col gap-1 p-1 rounded-lg select-none'>
-                    <div className='text-center'>
+                <div className='bg-slate-800 flex flex-col gap-1 p-1 rounded-lg select-none'>
+                    <div className='text-center whitespace-nowrap text-sm'>
                         {new Date(props.date.toISOString().substring(0, 10)).toLocaleDateString('en-US', { day: '2-digit', weekday: 'long', month: 'long' })}
                     </div>
                     <div
@@ -188,15 +202,15 @@ const TaskViewWithToolbar = ({ tasks }: { tasks: Tasks[] }) => {
                         <p><AddIcon></AddIcon></p>
                     </div>
                     {props.tasks
+                        .filter(e => ignoreCompleted ? e.status !== 'Complete' : true)
                         .filter(e => e.dueTo ? e.dueTo.toISOString().substring(0, 10) === props.date.toISOString().substring(0, 10) : false)
                         .map((e) => {
                             return (
                                 <div
                                     key={e.id}
-                                    className='bg-slate-700 text-sm flex flex-row gap-1 whitespace-nowrap overflow-x-clip p-1 rounded-md justify-between'
+                                    className={`text-xs text-black flex flex-row gap-1 whitespace-nowrap overflow-x-clip p-1 rounded-md justify-between ${color(e.status)}`}
                                 >
                                     <p className='overflow-clip'>{e.name}</p>
-                                    <p><Badge text={e.status.substring(0, 1)} status={getStatusFormText(e.status)}></Badge></p>
                                 </div>
                             )
                         })}
@@ -240,8 +254,10 @@ const TaskViewWithToolbar = ({ tasks }: { tasks: Tasks[] }) => {
         )
     }
 
-    const [ignoreCompleted, setIgnoreCompleted] = useState(false)
-    const [view, setView] = useState<'table' | 'calendar'>('table')
+    const [ignoreCompleted, setIgnoreCompleted] = useState(true)
+    const [view, setView] = useState<'table' | 'calendar'>('calendar')
+
+    const statusOrder = ['critical', 'major', 'minor', 'Complete']
 
     return (
         <div className='text-white w-full p-4 flex flex-col gap-4'>
@@ -264,6 +280,7 @@ const TaskViewWithToolbar = ({ tasks }: { tasks: Tasks[] }) => {
                         <Table tasks={
                             tasks
                                 .filter(e => ignoreCompleted ? e.status !== 'Complete' : true)
+                                .sort((a, b) => statusOrder.indexOf(a.status) < statusOrder.indexOf(b.status) ? -1 : 1)
                         }></Table>
                     }
                     {view === 'calendar' &&
@@ -318,7 +335,7 @@ const Toolbar = (props: ToolbarProps) => {
                 <input
                     type='checkbox'
                     checked={props.selected}
-                    onClick={() => props.onSelectionChange(!props.selected)}
+                    onChange={() => props.onSelectionChange(!props.selected)}
                 ></input>
                 <label>Ignore Completed</label>
             </div>
@@ -365,7 +382,20 @@ const Toolbar = (props: ToolbarProps) => {
                 open={dialogOpen}
                 onDismiss={() => setDialogOpen(false)}
             >
-                <AddTaskForm></AddTaskForm>
+                <form 
+                    className='flex flex-col gap-6 overflow-auto p-2 w-96'
+                    action={async (e) => {
+                        await addTask(e).then(console.dir)
+                        setDialogOpen(false)
+                    }}    
+                >
+                    <TaskInputs></TaskInputs>
+                    <div className='h-[2px] border border-slate-500'></div>
+                    <button
+                        type='submit'
+                        className='p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 text-white items-center hover:bg-slate-500 transition-all'
+                    >Add</button>
+                </form>
             </Dialog>
             <Dialog
                 title='Select a date'
@@ -604,48 +634,43 @@ const CalendarSelect = (props: CalendarSelectProps) => {
     )
 }
 
-const AddTaskForm = () => {
-
-    const initialState = {
-        error: '',
-        message: ''
-    }
-
-    const [state, formAction] = useFormState(addTask, initialState)
-    const { pending } = useFormStatus()
+const TaskInputs = () => {
 
     return (
-        <form action={formAction}>
-            <p className='pb-2 text-center text-red-400'>{state?.errors}</p>
-            <div className='flex flex-col gap-4 w-96'>
-                <div className='flex flex-col gap-6 overflow-auto p-2'>
-                    <input
-                        className='p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 text-white hover:bg-slate-500 transition-all'
-                        type='text'
-                        placeholder='Name'
-                        name='task_name'
-                    ></input>
-                    <textarea
-                        name='task_description'
-                        placeholder='Description'
-                        className='p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 text-white hover:bg-slate-500 transition-colors'>
-                    </textarea>
-                    <input
-                        name='task_due_to'
-                        type='date'
-                        placeholder='Due to'
-                        className='p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 dark:[color-scheme:dark] text-white hover:bg-slate-500 transition-all'
-                    ></input>
-                    <div className='h-[2px] border border-slate-500'></div>
-                </div>
-                <button
-                    disabled={pending}
-                    type='submit'
-                    className='p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 text-white items-center hover:bg-slate-500 transition-all'
-                >Add</button>
-            </div>
-        </form>
+        <>
+            <select
+                className='p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 text-white hover:bg-slate-500 transition-all'
+                name='task_status'
+            >
+                <option value={'critical'}>
+                            Critical
+                </option>
+                <option value={'major'}>
+                            Major
+                </option>
+                <option value={'minor'}>
+                            Minor
+                </option>
+            </select>
+            <input
+                className='p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 text-white hover:bg-slate-500 transition-all'
+                type='text'
+                placeholder='Name'
+                name='task_name'
+            ></input>
+            <textarea
+                name='task_description'
+                placeholder='Description'
+                className='p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 text-white hover:bg-slate-500 transition-colors'>
+            </textarea>
+            <input
+                name='task_due_to'
+                type='date'
+                placeholder='Due to'
+                className='p-2 shadow-lg shadow-slate-800 rounded-md bg-slate-600 dark:[color-scheme:dark] text-white hover:bg-slate-500 transition-all'
+            ></input>
+        </>
     )
 }
 
-export { TableDeleteButton, AddTaskForm, DropDownMenu, Toolbar, Dialog, TaskDateRow, TaskCompleteButton, TaskEditButton, TaskDeleteButton, TaskViewWithToolbar }
+export { TableDeleteButton, TaskInputs as AddTaskForm, DropDownMenu, Toolbar, Dialog, TaskDateRow, TaskCompleteButton, TaskEditButton, TaskDeleteButton, TaskViewWithToolbar }
